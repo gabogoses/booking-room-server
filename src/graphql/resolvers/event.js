@@ -96,7 +96,7 @@ const eventResolvers = {
 
                 const { eventStartTime: originalEventStartTime, user: originalUserId } = getOriginalEvent;
 
-                if (originalUserId !== currentUserId) {
+                if (originalUserId.toString() !== currentUserId) {
                     throw new AuthenticationError('User is not authorized to update this resource');
                 }
 
