@@ -3,7 +3,13 @@
 const mongoose = require('mongoose');
 const moment = require('moment');
 
-const { Schema } = mongoose;
+const Room = require('./Room');
+const User = require('./User');
+
+const {
+    Schema,
+    Types: { ObjectId },
+} = mongoose;
 
 const eventSchema = new Schema({
     eventName: {
@@ -52,16 +58,24 @@ const Event = mongoose.model('Event', eventSchema);
  * https://docs.mongodb.com/manual/core/index-ttl/
  */
 
- Event.watch().on('change', async (data) => {
+Event.watch().on('change', async (data) => {
     if (data.operationType === 'delete') {
         const { _id: deletedEventId } = data.documentKey;
 
         const findingEventRoom = await Room.find({ events: { $in: deletedEventId } });
         const findingUser = await User.find({ events: { $in: deletedEventId } });
 
-        console.log('findingEventRoom :>> ', findingEventRoom);
-        console.log('findingUser :>> ', findingUser);
+        if (findingEventRoom.length === 1) {
+            const room = findingEventRoom[0];
+            const { _id: roomId } = room;
+            await Room.updateOne({ _id: roomId }, { $pull: { events: ObjectId(deletedEventId) } });
+        }
 
+        if (findingUser.length === 1) {
+            const user = findingUser[0];
+            const { _id: userId } = user;
+            await User.updateOne({ _id: userId }, { $pull: { events: ObjectId(deletedEventId) } });
+        }
     }
 });
 
