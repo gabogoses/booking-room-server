@@ -1,5 +1,4 @@
-'use strict';
-
+/* eslint-disable func-names */
 const mongoose = require('mongoose');
 const moment = require('moment');
 
@@ -53,7 +52,8 @@ eventSchema.pre('save', function () {
 const Event = mongoose.model('Event', eventSchema);
 
 /**
- * Using the mongodb "Watch for Changes" stream to capture all deletion operations of an event document.
+ * Using the mongodb "Watch for Changes" stream to capture all deletion operations
+ * of an event document.
  * https://docs.mongodb.com/drivers/node/current/usage-examples/changeStream/
  * https://docs.mongodb.com/manual/core/index-ttl/
  */

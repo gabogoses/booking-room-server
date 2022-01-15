@@ -1,8 +1,6 @@
-'use strict';
-
 const { verify } = require('jsonwebtoken');
 
-const JWT_SECRET = process.env.JWT_SECRET;
+const { JWT_SECRET } = process.env;
 
 const decodeToken = (token) => {
     try {

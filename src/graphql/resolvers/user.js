@@ -1,12 +1,10 @@
-'use strict';
-
 const { ApolloError, AuthenticationError } = require('apollo-server');
 
 const { sendMail, signToken } = require('../../utils');
 
 const eventResolvers = {
     Query: {
-        me: async (_, {}, { id: currentUserId, isAuthenticated, models }) => {
+        me: async (_, args, { id: currentUserId, isAuthenticated, models }) => {
             if (!isAuthenticated) {
                 throw new AuthenticationError('User is not authorized to access this resource');
             }
@@ -60,7 +58,11 @@ const eventResolvers = {
                 throw new ApolloError(err);
             }
         },
-        updateUser: async (_, { userId, email }, { id: currentUserId, isAuthenticated, models }) => {
+        updateUser: async (
+            _,
+            { userId, email },
+            { id: currentUserId, isAuthenticated, models },
+        ) => {
             if (!isAuthenticated) {
                 throw new AuthenticationError('User is not authorized to access this resource');
             }
@@ -158,7 +160,7 @@ const eventResolvers = {
                 });
 
                 if (!user) {
-                    throw new Error(`Token is invalid or has expired`);
+                    throw new Error('Token is invalid or has expired');
                 }
 
                 user.password = password;
@@ -177,7 +179,11 @@ const eventResolvers = {
                 throw new ApolloError(err);
             }
         },
-        updatePassword: async (_, { newPassword, confirmPassword }, { id: currentUserId, isAuthenticated, models }) => {
+        updatePassword: async (
+            _,
+            { newPassword, confirmPassword },
+            { id: currentUserId, isAuthenticated, models },
+        ) => {
             if (!isAuthenticated) {
                 throw new AuthenticationError('User is not authorized to access this resource');
             }

@@ -1,5 +1,4 @@
-'use strict';
-
+/* eslint-disable func-names */
 const { randomUUID } = require('crypto');
 const mongoose = require('mongoose');
 const { hash, compare } = require('bcryptjs');
@@ -12,9 +11,7 @@ const userSchema = new Schema({
         required: [true, 'Tell us your email!'],
         lowercase: true,
         validate: {
-            validator: (value) => {
-                return /.+\@.+\..+/.test(value);
-            },
+            validator: (value) => /.+@.+\..+/.test(value),
             message: (props) => `${props.value} is not a valid email!`,
         },
         unique: true,

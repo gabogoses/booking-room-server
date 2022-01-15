@@ -1,5 +1,3 @@
-'use strict';
-
 const decodeToken = require('./decodeToken');
 const getEventEndTime = require('./getEventEndTime');
 const sendMail = require('./sendMail');

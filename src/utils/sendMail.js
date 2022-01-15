@@ -1,11 +1,9 @@
-'use strict';
-
 const nodemailer = require('nodemailer');
 
-const SMTP_HOST = process.env.SMTP_HOST;
-const SMTP_PORT = process.env.SMTP_PORT;
-const SMTP_USERNAME = process.env.SMTP_USERNAME;
-const SMTP_PASSWORD = process.env.SMTP_PASSWORD;
+const { SMTP_HOST } = process.env;
+const { SMTP_PORT } = process.env;
+const { SMTP_USERNAME } = process.env;
+const { SMTP_PASSWORD } = process.env;
 
 const sendMail = async ({ recipient, subject, message }) => {
     try {
@@ -21,7 +19,7 @@ const sendMail = async ({ recipient, subject, message }) => {
         const mailStatus = await transporter.sendMail({
             from: 'no-reply@booking-room-app.com',
             to: recipient,
-            subject: subject,
+            subject,
             html: message,
         });
 

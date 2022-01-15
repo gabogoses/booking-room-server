@@ -1,5 +1,3 @@
-'use strict';
-
 const { ApolloError, AuthenticationError } = require('apollo-server');
 const moment = require('moment');
 
@@ -7,7 +5,7 @@ const EVENT_DURATION_IN_MINUTES = 60;
 
 const eventResolvers = {
     Query: {
-        getEvents: async (_, {}, { models }) => {
+        getEvents: async (_, args, { models }) => {
             try {
                 return models.Event.find({}).populate({
                     path: 'room',
@@ -38,9 +36,9 @@ const eventResolvers = {
         createEvent: async (
             _,
             { eventName, eventStartTime, roomId },
-            { id: currentUserId, isAuthenticated, models }
+            { id: currentUserId, isAuthenticated, models },
         ) => {
-            if (!isAuthenticated && !isAdmin) {
+            if (!isAuthenticated) {
                 throw new AuthenticationError('User is not allowed to create this ressource');
             }
 
@@ -85,8 +83,13 @@ const eventResolvers = {
         },
         updateEvent: async (
             _,
-            { eventId: currentEventId, eventName: currentEventName, eventStartTime, roomId: currentRoomId },
-            { id: currentUserId, isAuthenticated, models }
+            {
+                eventId: currentEventId,
+                eventName: currentEventName,
+                eventStartTime,
+                roomId: currentRoomId,
+            },
+            { id: currentUserId, isAuthenticated, models },
         ) => {
             if (!isAuthenticated) {
                 throw new AuthenticationError('User is not authorized to access this resource');
@@ -122,7 +125,11 @@ const eventResolvers = {
                     expiresAt: eventEndTime,
                 };
 
-                const event = await models.Event.findOneAndUpdate(eventFilter, update, { new: true });
+                const event = await models.Event.findOneAndUpdate(
+                    eventFilter,
+                    update,
+                    { new: true },
+                );
 
                 return event;
             } catch (err) {

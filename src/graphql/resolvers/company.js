@@ -1,10 +1,12 @@
-'use strict';
-
 const { ApolloError, AuthenticationError } = require('apollo-server');
 
 const companyResolvers = {
     Mutation: {
-        createCompany: async (_, { companyName }, { models }) => {
+        createCompany: async (
+            _,
+            { companyName },
+            { isAuthenticated, isAdmin, models },
+        ) => {
             if (!isAuthenticated && !isAdmin) {
                 throw new AuthenticationError('User is not allowed to create this ressource');
             }

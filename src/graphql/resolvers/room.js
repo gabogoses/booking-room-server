@@ -1,10 +1,8 @@
-'use strict';
-
 const { ApolloError, AuthenticationError } = require('apollo-server');
 
 const roomResolvers = {
     Query: {
-        getRooms: async (_, {}, { models }) => {
+        getRooms: async (_, args, { models }) => {
             try {
                 return models.Room.find({}).populate({
                     path: 'events',

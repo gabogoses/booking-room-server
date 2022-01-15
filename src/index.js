@@ -1,18 +1,15 @@
-'use strict';
-
 require('dotenv').config();
 
 const { ApolloServer } = require('apollo-server');
 
-const typeDefs = require('./graphql/schema');
-const resolvers = require('./graphql/resolvers');
+const { typeDefs, resolvers } = require('./graphql');
 const connectDatabase = require('./config/db');
 const models = require('./models');
 const decodeToken = require('./utils/decodeToken');
 
 connectDatabase();
 
-const startApolloServer = async (typeDefs, resolvers) => {
+const startApolloServer = async () => {
     const server = new ApolloServer({
         typeDefs,
         resolvers,
@@ -21,7 +18,12 @@ const startApolloServer = async (typeDefs, resolvers) => {
 
             if (token) {
                 const { id, isAdmin, isAuthenticated } = decodeToken(token);
-                return { isAdmin, id, isAuthenticated, models };
+                return {
+                    isAdmin,
+                    id,
+                    isAuthenticated,
+                    models,
+                };
             }
 
             return { models };
@@ -36,4 +38,4 @@ const startApolloServer = async (typeDefs, resolvers) => {
       `);
 };
 
-startApolloServer(typeDefs, resolvers);
+startApolloServer();
