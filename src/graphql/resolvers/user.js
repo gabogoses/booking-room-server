@@ -93,8 +93,40 @@ const eventResolvers = {
         resetPassword: async (_, {}, { models }) => {
             return 'READY';
         },
-        updatePassword: async (_, {}, { models }) => {
-            return 'READY';
+        updatePassword: async (_, { newPassword, confirmPassword }, { id: currentUserId, isAuthenticated, models }) => {
+            if (!isAuthenticated) {
+                throw new AuthenticationError('User is not authorized to access this resource');
+            }
+
+            if (!newPassword || !confirmPassword) {
+                throw new Error('Invalid user input');
+            }
+
+            try {
+                const user = await models.User.findById(currentUserId).select('+password');
+
+                if (!user) {
+                    throw new Error('No user found');
+                }
+
+                const isValidPassword = await user.evaluatePassword(confirmPassword, user.password);
+
+                if (!isValidPassword) {
+                    throw new Error('Current password is wrong!');
+                }
+
+                user.password = newPassword;
+                await user.save({ validateBeforeSave: true });
+
+                const { _id: userId, isAdmin } = user;
+
+                const token = signToken(userId, isAdmin);
+
+                return { token };
+            } catch (err) {
+                console.error('An error occured', err.message);
+                throw new ApolloError(err);
+            }
         },
     },
 };
