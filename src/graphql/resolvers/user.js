@@ -1,7 +1,7 @@
 'use strict';
 
 const { ApolloError, AuthenticationError } = require('apollo-server');
-const { signToken } = require('../../utils');
+const { sendMail, signToken } = require('../../utils');
 
 const eventResolvers = {
     Query: {
