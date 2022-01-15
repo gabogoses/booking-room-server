@@ -4,11 +4,11 @@
 
 This server works with [Node.js](https://nodejs.org/en/), [Apollo Server](https://www.apollographql.com/docs/apollo-server/), [MongoDB Atlas](https://www.mongodb.com/atlas) and, [Mongoose](https://mongoosejs.com/).
 
-It exposes a GraphQL API deployed on [Heroku](https://www.heroku.com)
+It exposes a GraphQL API deployed on [Heroku](https://www.heroku.com).
 
 ## Environment Variables
 
-To run this project, you will need to add the following environment variables to your .env file
+To run this project, you will need to add the following environment variables to your .env file.
 
 `MONGO_USER` MongoDB username
 
