@@ -1,8 +1,9 @@
 'use strict';
 
 const { ApolloError, AuthenticationError } = require('apollo-server');
+const moment = require('moment');
 
-const { getEventEndTime } = require('../../utils');
+const EVENT_DURATION_IN_MINUTES = 60;
 
 const eventResolvers = {
     Query: {
@@ -34,17 +35,21 @@ const eventResolvers = {
         },
     },
     Mutation: {
-        createEvent: async (_, { eventName, eventStartTime, room }, { id: currentUserId, isAuthenticated, models }) => {
+        createEvent: async (
+            _,
+            { eventName, eventStartTime, roomId },
+            { id: currentUserId, isAuthenticated, models }
+        ) => {
             if (!isAuthenticated && !isAdmin) {
                 throw new AuthenticationError('User is not allowed to create this ressource');
             }
 
-            if (!room || !eventStartTime) {
+            if (!roomId || !eventStartTime) {
                 throw new Error('Invalid user inputs');
             }
 
             try {
-                const selectedEventRoom = await models.Room.findById(room);
+                const selectedEventRoom = await models.Room.findById(roomId);
 
                 if (!selectedEventRoom) {
                     throw new Error('Cannot find room');
@@ -80,7 +85,7 @@ const eventResolvers = {
         },
         updateEvent: async (
             _,
-            { eventId:currentEventId, eventName: currentEventName, eventStartTime, room: currentRoomId },
+            { eventId: currentEventId, eventName: currentEventName, eventStartTime, roomId: currentRoomId },
             { id: currentUserId, isAuthenticated, models }
         ) => {
             if (!isAuthenticated) {
@@ -106,30 +111,18 @@ const eventResolvers = {
                     throw new Error('Cannot find room');
                 }
 
-                const dateValues = {
+                const eventEndTime = moment(eventStartTime).utc().add(EVENT_DURATION_IN_MINUTES, 'minutes');
+
+                const eventFilter = { _id: currentEventId };
+                const update = {
+                    eventName: currentEventName,
+                    room: currentRoomId,
+                    eventEndTime,
                     eventStartTime,
-                    originalEventStartTime,
+                    expiresAt: eventEndTime,
                 };
 
-                const haveSameStartTime = originalEventStartTime === eventStartTime;
-
-                let eventEndTime;
-
-                haveSameStartTime
-                    ? (eventEndTime = originalEventStartTime)
-                    : (eventEndTime = getEventEndTime(dateValues));
-
-                const event = await models.Event.findOneAndUpdate(
-                    { _id: currentEventId },
-                    {
-                        currentEventName,
-                        currentRoomId,
-                        eventEndTime,
-                        eventStartTime,
-                        expiresAt: eventEndTime,
-                    },
-                    { new: true, validate: true }
-                );
+                const event = await models.Event.findOneAndUpdate(eventFilter, update, { new: true });
 
                 return event;
             } catch (err) {
@@ -137,29 +130,33 @@ const eventResolvers = {
                 throw new ApolloError(err);
             }
         },
-        deleteEvent: async (_, { id: currentEventId }, { id: currentUserId, isAuthenticated, models }) => {
+        deleteEvent: async (_, { eventId }, { id: currentUserId, isAuthenticated, models }) => {
             if (!isAuthenticated) {
                 throw new AuthenticationError('User is not authorized to access this resource');
             }
 
-            if (!currentEventId) {
+            if (!eventId) {
                 throw new Error('Invalid user input');
             }
 
             try {
-                const event = await models.Event.findById({ _id: currentEventId });
+                const getOriginalEvent = await models.Event.findById(eventId);
 
-                if (!event) {
+                if (!getOriginalEvent) {
                     throw new Error('Cannot find event');
                 }
 
                 const { user: originalUserId } = getOriginalEvent;
 
-                if (originalUserId === currentUserId) {
+                if (originalUserId.toString() !== currentUserId) {
                     throw new AuthenticationError('User is not authorized to delete this resource');
                 }
 
-                await models.Event.findByIdAndDelete({ _id: id });
+                await models.Event.findByIdAndDelete(eventId);
+                
+                return {
+                    message: 'Event deleted',
+                };
             } catch (err) {
                 console.error('An error occured', err.message);
                 throw new ApolloError(err);

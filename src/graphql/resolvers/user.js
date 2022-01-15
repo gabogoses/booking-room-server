@@ -60,7 +60,7 @@ const eventResolvers = {
                 throw new ApolloError(err);
             }
         },
-        updateUser: async (_, { email, userId }, { id: currentUserId, isAuthenticated, models }) => {
+        updateUser: async (_, { userId, email }, { id: currentUserId, isAuthenticated, models }) => {
             if (!isAuthenticated) {
                 throw new AuthenticationError('User is not authorized to access this resource');
             }
@@ -108,7 +108,7 @@ const eventResolvers = {
                 throw new ApolloError(err);
             }
         },
-        forgotPassword: async (_, { email, offset }, { models }) => {
+        forgotPassword: async (_, { email }, { models }) => {
             if (!email) {
                 throw new Error('Invalid user input');
             }
@@ -120,7 +120,7 @@ const eventResolvers = {
             }
 
             try {
-                const resetToken = user.createPasswordResetToken(offset);
+                const resetToken = user.createPasswordResetToken();
                 await user.save();
 
                 const subject = 'Reset password instructions';

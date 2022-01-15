@@ -52,17 +52,17 @@ const typeDefs = gql`
 
     type Mutation {
         createCompany(companyName: String): Company
-        createEvent(user: String, eventName: String, eventStartTime: String, room: String): Event
+        createEvent(eventName: String, eventStartTime: String, roomId: String): Event
         createRoom(roomNumber: String): Room
-        deleteEvent(id: ID): Event
-        deleteUser(id: ID): User
+        deleteEvent(eventId: ID): Message
+        deleteUser(userId: ID): User
         forgotPassword(email: String): Message
         login(email: String, password: String): AuthPayLoad
         resetPassword(email: String, password: String, resetToken: String): AuthPayLoad
         signup(email: String, password: String): AuthPayLoad
-        updatePassword(id: ID, newPassword: String, confirmPassword: String): AuthPayLoad
-        updateEvent(eventId: ID, eventName: String, eventStartTime: String, room: String): Event
-        updateUser(id: ID, email: String, userId: String): AuthPayLoad
+        updatePassword(newPassword: String, confirmPassword: String): AuthPayLoad
+        updateEvent(eventId: ID, eventName: String, eventStartTime: String, roomId: String): Event
+        updateUser(userId: ID, email: String): AuthPayLoad
     }
 `;
 
