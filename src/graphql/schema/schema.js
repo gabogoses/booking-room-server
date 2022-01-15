@@ -61,7 +61,7 @@ const typeDefs = gql`
         resetPassword(email: String, password: String, resetToken: String): AuthPayLoad
         signup(email: String, password: String): AuthPayLoad
         updatePassword(id: ID, newPassword: String, confirmPassword: String): AuthPayLoad
-        updateEvent(id: ID, eventName: String, eventStartTime: String, room: String): Event
+        updateEvent(eventId: ID, eventName: String, eventStartTime: String, room: String): Event
         updateUser(id: ID, email: String, userId: String): AuthPayLoad
     }
 `;
