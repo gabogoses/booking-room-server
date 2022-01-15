@@ -78,6 +78,7 @@ const eventResolvers = {
                 user.email = email;
                 await user.save({ validateBeforeSave: true });
 
+                const { isAdmin } = user;
                 const token = signToken(userId, isAdmin);
 
                 return { token };
