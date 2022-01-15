@@ -18,6 +18,10 @@ const eventResolvers = {
             }
         },
         getEvent: async (_, { id }, { models }) => {
+            if (!id) {
+                throw new Error('Invalid user input');
+            }
+
             try {
                 return models.Event.findById(id).populate({
                     path: 'room',
