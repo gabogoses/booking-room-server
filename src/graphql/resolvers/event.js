@@ -80,7 +80,7 @@ const eventResolvers = {
         },
         updateEvent: async (
             _,
-            { id: currentEventId, eventName: currentEventName, eventStartTime, room: currentRoomId },
+            { eventName: currentEventName, eventStartTime, room: currentRoomId },
             { id: currentUserId, isAuthenticated, models }
         ) => {
             if (!isAuthenticated) {
@@ -96,7 +96,7 @@ const eventResolvers = {
 
                 const { eventStartTime: originalEventStartTime, user: originalUserId } = getOriginalEvent;
 
-                if (originalUserId === currentUserId) {
+                if (originalUserId !== currentUserId) {
                     throw new AuthenticationError('User is not authorized to update this resource');
                 }
 
