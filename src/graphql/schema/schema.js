@@ -31,6 +31,13 @@ const typeDefs = gql`
         user: User
     }
 
+    type User {
+        id: ID!
+        email: String!
+        password: String
+        events: [Event]
+    }
+
     type Query {
         getRooms: [Room]
         getRoom(id: ID): Room
