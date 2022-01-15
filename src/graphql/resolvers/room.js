@@ -6,7 +6,10 @@ const roomResolvers = {
     Query: {
         getRooms: async (_, {}, { models }) => {
             try {
-                return models.Room.find({}).populate('events');
+                return models.Room.find({}).populate({
+                    path: 'events',
+                    populate: { path: 'user' },
+                });
             } catch (err) {
                 console.error('An error occured', err.message);
                 throw new ApolloError(err);
@@ -14,7 +17,12 @@ const roomResolvers = {
         },
         getRoom: async (_, { id }, { models }) => {
             try {
-                return models.Room.findById(id).populate('event').populate('user');
+                return models.Room.findById(id)
+                    .populate('event')
+                    .populate({
+                        path: 'events',
+                        populate: { path: 'user' },
+                    });
             } catch (err) {
                 console.error('An error occured', err.message);
                 throw new ApolloError(err);
