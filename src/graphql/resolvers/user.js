@@ -59,8 +59,30 @@ const eventResolvers = {
                 throw new ApolloError(err);
             }
         },
-        updateUser: async (_, {}, { models }) => {
-            return 'READY';
+        updateUser: async (_, { email, userId }, { id: currentUserId, isAuthenticated, models }) => {
+            if (!isAuthenticated) {
+                throw new AuthenticationError('User is not authorized to access this resource');
+            }
+
+            if (!email || !userId) {
+                throw new Error('Invalid user inputs');
+            }
+
+            try {
+                const user = await models.User.findById(userId).select('+password');
+
+                if (currentUserId === userId) {
+                    throw new AuthenticationError('User is not authorized to update this resource');
+                }
+
+                user.email = email;
+                await user.save({ validateBeforeSave: true });
+
+                return newRoom;
+            } catch (err) {
+                console.error('An error occured', err.message);
+                throw new ApolloError(err);
+            }
         },
         deleteUser: async (_, {}, { models }) => {
             return 'READY';
