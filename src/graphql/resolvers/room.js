@@ -13,7 +13,12 @@ const roomResolvers = {
             }
         },
         getRoom: async (_, { id }, { models }) => {
-            return 'READY';
+            try {
+                return models.Room.findById(id).populate('event').populate('user');
+            } catch (err) {
+                console.error('An error occured', err.message);
+                throw new ApolloError(err);
+            }
         },
     },
     Mutation: {
