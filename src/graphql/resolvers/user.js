@@ -5,8 +5,17 @@ const { signToken } = require('../../utils');
 
 const eventResolvers = {
     Query: {
-        me: async (_, { id }, { models }) => {
-            return 'READY';
+        me: async (_, {}, { id: currentUserId, isAuthenticated, models }) => {
+            if (!isAuthenticated) {
+                throw new AuthenticationError('User is not authorized to access this resource');
+            }
+
+            try {
+                return models.User.findById(currentUserId).populate('events');
+            } catch (err) {
+                console.error('An error occured', err.message);
+                throw new ApolloError(err);
+            }
         },
     },
     Mutation: {
