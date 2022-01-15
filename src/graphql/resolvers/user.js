@@ -98,7 +98,7 @@ const eventResolvers = {
             }
 
             try {
-                await models.User.findOneAndDelete({ _id: currentUserId });
+                await models.User.findByIdAndDelete(currentUserId);
 
                 return {
                     message: 'User deleted',
