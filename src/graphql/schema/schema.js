@@ -62,7 +62,7 @@ const typeDefs = gql`
         signup(email: String, password: String): AuthPayLoad
         updatePassword(id: ID, newPassword: String, confirmPassword: String): AuthPayLoad
         updateEvent(id: ID, user: String, eventName: String, eventStartTime: String, room: String): Event
-        updateUser(id: ID, email: String, password: String): User
+        updateUser(id: ID, email: String, password: String): AuthPayLoad
     }
 `;
 

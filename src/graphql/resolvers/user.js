@@ -78,7 +78,9 @@ const eventResolvers = {
                 user.email = email;
                 await user.save({ validateBeforeSave: true });
 
-                return newRoom;
+                const token = signToken(userId, isAdmin);
+
+                return { token };
             } catch (err) {
                 console.error('An error occured', err.message);
                 throw new ApolloError(err);
