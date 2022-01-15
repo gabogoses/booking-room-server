@@ -6,9 +6,6 @@ const { hash, compare } = require('bcryptjs');
 
 const { Schema } = mongoose;
 
-const TEN_MINUTES_IN_MS = 10 * 60 * 1000;
-const NOW = Date.now();
-
 const userSchema = new Schema({
     email: {
         type: String,
@@ -64,7 +61,7 @@ userSchema.methods.createPasswordResetToken = function () {
     const resetToken = randomUUID();
 
     this.passwordResetToken = resetToken;
-    this.passwordResetExpires = NOW + TEN_MINUTES_IN_MS;
+    this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
 
     return resetToken;
 };

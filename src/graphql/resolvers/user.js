@@ -1,6 +1,7 @@
 'use strict';
 
 const { ApolloError, AuthenticationError } = require('apollo-server');
+
 const { sendMail, signToken } = require('../../utils');
 
 const eventResolvers = {
@@ -107,7 +108,7 @@ const eventResolvers = {
                 throw new ApolloError(err);
             }
         },
-        forgotPassword: async (_, { email }, { models }) => {
+        forgotPassword: async (_, { email, offset }, { models }) => {
             if (!email) {
                 throw new Error('Invalid user input');
             }
@@ -119,13 +120,13 @@ const eventResolvers = {
             }
 
             try {
-                const resetToken = user.createPasswordResetToken();
+                const resetToken = user.createPasswordResetToken(offset);
                 await user.save();
 
-                const subject = 'Reset your password';
+                const subject = 'Reset password instructions';
                 const resetUrl = `https://example-website.com/reset-password/${resetToken}`;
-                const hotText = 'HERE';
-                const message = `<b>Hello, Forgot your password? Please click <a href=${resetUrl}>${hotText}</a></b></p>`;
+                const hotText = 'Change my password';
+                const message = `<b><strong>Hello ${email}</strong>, Forgot your password? Someone has request a link to change your password. You can do this through the button below.\n <a href=${resetUrl}>${hotText}</a></b></p>`;
 
                 await sendMail({
                     recipient: email,
@@ -154,7 +155,7 @@ const eventResolvers = {
                 const user = await models.User.findOne({
                     passwordResetToken: resetToken,
                     passwordResetExpires: { $gt: Date.now() },
-                }).setOptions({ sanitizeFilter: true });
+                });
 
                 if (!user) {
                     throw new Error(`Token is invalid or has expired`);
