@@ -71,7 +71,7 @@ const eventResolvers = {
             try {
                 const user = await models.User.findById(userId).select('+password');
 
-                if (currentUserId === userId) {
+                if (currentUserId !== userId) {
                     throw new AuthenticationError('User is not authorized to update this resource');
                 }
 
