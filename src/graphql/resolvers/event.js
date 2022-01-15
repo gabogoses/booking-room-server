@@ -1,6 +1,8 @@
 const { ApolloError, AuthenticationError } = require('apollo-server');
 const moment = require('moment');
 
+const { isRoomBooked } = require('../../utils');
+
 const EVENT_DURATION_IN_MINUTES = 60;
 
 const eventResolvers = {
@@ -52,6 +54,13 @@ const eventResolvers = {
                 if (!selectedEventRoom) {
                     throw new Error('Cannot find room');
                 }
+                const { events } = selectedEventRoom;
+
+                const isBooked = await isRoomBooked(events, eventStartTime);
+
+                if (events.length >= 1 && isBooked) {
+                    throw new Error('Room already booked');
+                }
 
                 const currentUser = await models.User.findById(currentUserId);
 
@@ -89,7 +98,10 @@ const eventResolvers = {
                 eventStartTime,
                 roomId: currentRoomId,
             },
-            { id: currentUserId, isAuthenticated, models },
+            {
+                id: currentUserId,
+                isAuthenticated, models,
+            },
         ) => {
             if (!isAuthenticated) {
                 throw new AuthenticationError('User is not authorized to access this resource');
@@ -108,10 +120,17 @@ const eventResolvers = {
                     throw new AuthenticationError('User is not authorized to update this resource');
                 }
 
-                const selectedRoom = await models.Room.findById(currentRoomId);
+                const selectedEventRoom = await models.Room.findById(currentRoomId);
 
-                if (!selectedRoom) {
+                if (!selectedEventRoom) {
                     throw new Error('Cannot find room');
+                }
+
+                const { events } = selectedEventRoom;
+                const isBooked = await isRoomBooked(events, eventStartTime);
+
+                if (events.length >= 1 && isBooked) {
+                    throw new Error('Room already booked');
                 }
 
                 const eventEndTime = moment(eventStartTime).utc().add(EVENT_DURATION_IN_MINUTES, 'minutes');
