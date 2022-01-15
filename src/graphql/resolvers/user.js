@@ -84,8 +84,25 @@ const eventResolvers = {
                 throw new ApolloError(err);
             }
         },
-        deleteUser: async (_, {}, { models }) => {
-            return 'READY';
+        deleteUser: async (_, { userId }, { id: currentUserId, isAuthenticated, models }) => {
+            if (!isAuthenticated) {
+                throw new AuthenticationError('User is not authorized to access this resource');
+            }
+
+            if (currentUserId === userId) {
+                throw new AuthenticationError('User is not authorized to update this resource');
+            }
+
+            try {
+                await models.User.findOneAndDelete({ _id: currentUserId });
+
+                return {
+                    message: 'User deleted',
+                };
+            } catch (err) {
+                console.error('An error occured', err.message);
+                throw new ApolloError(err);
+            }
         },
         forgotPassword: async (_, { email }, { models }) => {
             if (!email) {
