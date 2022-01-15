@@ -9,7 +9,7 @@ const eventSchema = new Schema({
     eventName: {
         type: String,
     },
-    room: {
+    roomId: {
         type: Schema.Types.ObjectId,
         ref: 'Room',
         required: true,
@@ -25,7 +25,7 @@ const eventSchema = new Schema({
         type: Number,
         default: 60,
     },
-    user: {
+    userId: {
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true,
@@ -46,9 +46,22 @@ eventSchema.pre('save', function () {
 
 const Event = mongoose.model('Event', eventSchema);
 
-Event.watch().on('change', (data) => {
+/**
+ * Using the mongodb "Watch for Changes" stream to capture all deletion operations of an event document.
+ * https://docs.mongodb.com/drivers/node/current/usage-examples/changeStream/
+ * https://docs.mongodb.com/manual/core/index-ttl/
+ */
+
+ Event.watch().on('change', async (data) => {
     if (data.operationType === 'delete') {
-        console.log(data);
+        const { _id: deletedEventId } = data.documentKey;
+
+        const findingEventRoom = await Room.find({ events: { $in: deletedEventId } });
+        const findingUser = await User.find({ events: { $in: deletedEventId } });
+
+        console.log('findingEventRoom :>> ', findingEventRoom);
+        console.log('findingUser :>> ', findingUser);
+
     }
 });
 

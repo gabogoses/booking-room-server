@@ -63,9 +63,9 @@ const eventResolvers = {
 
                 const newEvent = new models.Event({
                     eventName,
-                    room,
+                    roomId,
                     eventStartTime,
-                    user: currentUserId,
+                    userId: currentUserId,
                 });
 
                 const { _id: eventId } = newEvent;
