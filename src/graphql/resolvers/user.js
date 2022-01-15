@@ -1,6 +1,7 @@
 'use strict';
 
 const { ApolloError, AuthenticationError } = require('apollo-server');
+const { signToken } = require('../../utils');
 
 const eventResolvers = {
     Query: {
@@ -27,8 +28,27 @@ const eventResolvers = {
                 throw new ApolloError(err);
             }
         },
-        login: async (_, {}, { models }) => {
-            return 'READY';
+        login: async (_, { email, password }, { models }) => {
+            if (!email || !password) {
+                throw new Error('Invalid user inputs');
+            }
+
+            try {
+                const user = await models.User.findOne({ email }).select('+password');
+                const isValidPassword = await user.evaluatePassword(password, user.password);
+
+                if (!user || !isValidPassword) {
+                    throw new Error('Incorrect email or password');
+                }
+
+                const { _id: userId, isAdmin } = user;
+                const token = signToken(userId, isAdmin);
+
+                return { token };
+            } catch (err) {
+                console.error('An error occured', err.message);
+                throw new ApolloError(err);
+            }
         },
         updateUser: async (_, {}, { models }) => {
             return 'READY';
