@@ -80,7 +80,7 @@ const eventResolvers = {
         },
         updateEvent: async (
             _,
-            { eventName: currentEventName, eventStartTime, room: currentRoomId },
+            { eventId:currentEventId, eventName: currentEventName, eventStartTime, room: currentRoomId },
             { id: currentUserId, isAuthenticated, models }
         ) => {
             if (!isAuthenticated) {
