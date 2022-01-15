@@ -17,7 +17,7 @@ const roomResolvers = {
         },
         getRoom: async (_, { id }, { models }) => {
             if (!id) {
-                throw new Error('Invalid user inputs');
+                throw new Error('Invalid user input');
             }
 
             try {
