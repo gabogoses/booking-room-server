@@ -8,7 +8,10 @@ const eventResolvers = {
     Query: {
         getEvents: async (_, {}, { models }) => {
             try {
-                return models.Event.find({}).populate('room').populate('user');
+                return models.Event.find({}).populate({
+                    path: 'room',
+                    populate: { path: 'user' },
+                });
             } catch (err) {
                 console.error('An error occured', err.message);
                 throw new ApolloError(err);
@@ -16,7 +19,10 @@ const eventResolvers = {
         },
         getEvent: async (_, { id }, { models }) => {
             try {
-                return models.Event.findById(id).populate('room').populate('user');
+                return models.Event.findById(id).populate({
+                    path: 'room',
+                    populate: { path: 'user' },
+                });
             } catch (err) {
                 console.error('An error occured', err.message);
                 throw new ApolloError(err);
