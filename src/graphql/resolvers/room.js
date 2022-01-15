@@ -16,12 +16,15 @@ const roomResolvers = {
             }
         },
         getRoom: async (_, { id }, { models }) => {
+            if (!id) {
+                throw new Error('Invalid user inputs');
+            }
+
             try {
-                return models.Room.findById(id)
-                    .populate({
-                        path: 'events',
-                        populate: { path: 'user' },
-                    });
+                return models.Room.findById(id).populate({
+                    path: 'events',
+                    populate: { path: 'user' },
+                });
             } catch (err) {
                 console.error('An error occured', err.message);
                 throw new ApolloError(err);
