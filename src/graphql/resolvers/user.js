@@ -125,8 +125,36 @@ const eventResolvers = {
                 throw new ApolloError(err);
             }
         },
-        resetPassword: async (_, {}, { models }) => {
-            return 'READY';
+        resetPassword: async (_, { email, password, resetToken }, { models }) => {
+            if (!email || !resetToken) {
+                throw new Error('Invalid user inputs');
+            }
+
+            try {
+                const user = await models.User.findOne({
+                    passwordResetToken: resetToken,
+                    passwordResetExpires: { $gt: Date.now() },
+                }).setOptions({ sanitizeFilter: true });
+
+                if (!user) {
+                    throw new Error(`Token is invalid or has expired`);
+                }
+
+                user.password = password;
+                user.passwordResetToken = undefined;
+                user.passwordResetExpires = undefined;
+
+                await user.save();
+
+                const { _id: userId, isAdmin } = user;
+
+                const token = signToken(userId, isAdmin);
+
+                return { token };
+            } catch (err) {
+                console.error('An error occured', err.message);
+                throw new ApolloError(err);
+            }
         },
         updatePassword: async (_, { newPassword, confirmPassword }, { id: currentUserId, isAuthenticated, models }) => {
             if (!isAuthenticated) {
