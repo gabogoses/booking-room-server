@@ -3,6 +3,10 @@
 const { gql } = require('apollo-server');
 
 const typeDefs = gql`
+    type AuthPayLoad {
+        token: String!
+    }
+
     type Company {
         id: ID!
         companyName: String!
@@ -43,6 +47,7 @@ const typeDefs = gql`
         getRoom(id: ID): Room
         getEvents: [Event]
         getEvent(id: ID): Event
+        me: User
     }
 
     type Mutation {
@@ -50,7 +55,14 @@ const typeDefs = gql`
         createEvent(user: String, eventName: String, eventStartTime: String, room: String): Event
         createRoom(roomNumber: String): Room
         deleteEvent(id: ID): Event
+        deleteUser(id: ID): User
+        forgotPassword(email: String): Message
+        login(email: String, password: String): AuthPayLoad
+        resetPassword(email: String, password: String, resetToken: String): AuthPayLoad
+        signup(email: String, password: String): AuthPayLoad
+        updatePassword(id: ID, newPassword: String, confirmPassword: String): AuthPayLoad
         updateEvent(id: ID, user: String, eventName: String, eventStartTime: String, room: String): Event
+        updateUser(id: ID, email: String, password: String): User
     }
 `;
 
