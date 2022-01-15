@@ -32,6 +32,8 @@ const typeDefs = gql`
     }
 
     type Query {
+        getRooms: [Room]
+        getRoom(id: ID): Room
         getEvents: [Event]
         getEvent(id: ID): Event
     }
@@ -39,6 +41,7 @@ const typeDefs = gql`
     type Mutation {
         createCompany(companyName: String): Company
         createEvent(user: String, eventName: String, eventStartTime: String, room: String): Event
+        createRoom(roomNumber: String): Room
         deleteEvent(id: ID): Event
         updateEvent(id: ID, user: String, eventName: String, eventStartTime: String, room: String): Event
     }
