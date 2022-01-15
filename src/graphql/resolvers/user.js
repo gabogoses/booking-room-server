@@ -87,8 +87,43 @@ const eventResolvers = {
         deleteUser: async (_, {}, { models }) => {
             return 'READY';
         },
-        forgotPassword: async (_, {}, { models }) => {
-            return 'READY';
+        forgotPassword: async (_, { email }, { models }) => {
+            if (!email) {
+                throw new Error('Invalid user input');
+            }
+
+            const user = await models.User.findOne({ email });
+
+            if (!user) {
+                throw new Error(`There is no user with email address: ${email}`);
+            }
+
+            try {
+                const resetToken = user.createPasswordResetToken();
+                await user.save();
+
+                const subject = 'Reset your password';
+                const resetUrl = `https://example-website.com/reset-password/${resetToken}`;
+                const hotText = 'HERE';
+                const message = `<b>Hello, Forgot your password? Please click <a href=${resetUrl}>${hotText}</a></b></p>`;
+
+                await sendMail({
+                    recipient: email,
+                    subject,
+                    message,
+                });
+
+                return {
+                    message: 'Email send',
+                };
+            } catch (err) {
+                user.passwordResetExpires = undefined;
+                user.passwordResetToken = undefined;
+                await user.save();
+
+                console.error('An error occured', err.message);
+                throw new ApolloError(err);
+            }
         },
         resetPassword: async (_, {}, { models }) => {
             return 'READY';
