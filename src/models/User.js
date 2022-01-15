@@ -1,6 +1,7 @@
 'use strict';
 
 const mongoose = require('mongoose');
+const { hash } = require('bcryptjs');
 
 const { Schema } = mongoose;
 
@@ -33,6 +34,13 @@ const userSchema = new Schema({
             ref: 'Event',
         },
     ],
+});
+
+userSchema.pre('save', async function () {
+    if (!this.isModified('password')) {
+        return;
+    }
+    this.password = await hash(this.password, 12);
 });
 
 const User = mongoose.model('User', userSchema);
