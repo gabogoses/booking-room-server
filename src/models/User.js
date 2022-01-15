@@ -1,9 +1,13 @@
 'use strict';
 
+const { randomUUID } = require('crypto');
 const mongoose = require('mongoose');
 const { hash, compare } = require('bcryptjs');
 
 const { Schema } = mongoose;
+
+const TEN_MINUTES_IN_MS = 10 * 60 * 1000;
+const NOW = Date.now();
 
 const userSchema = new Schema({
     email: {
@@ -34,6 +38,15 @@ const userSchema = new Schema({
             ref: 'Event',
         },
     ],
+    passwordChangedDate: {
+        type: Date,
+    },
+    passwordResetToken: {
+        type: String,
+    },
+    passwordResetExpires: {
+        type: Date,
+    },
 });
 
 userSchema.pre('save', async function () {
@@ -45,6 +58,15 @@ userSchema.pre('save', async function () {
 
 userSchema.methods.evaluatePassword = async function (candidatePassword, userPassword) {
     return compare(candidatePassword, userPassword);
+};
+
+userSchema.methods.createPasswordResetToken = function () {
+    const resetToken = randomUUID();
+
+    this.passwordResetToken = resetToken;
+    this.passwordResetExpires = NOW + TEN_MINUTES_IN_MS;
+
+    return resetToken;
 };
 
 const User = mongoose.model('User', userSchema);
