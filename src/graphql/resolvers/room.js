@@ -18,7 +18,6 @@ const roomResolvers = {
         getRoom: async (_, { id }, { models }) => {
             try {
                 return models.Room.findById(id)
-                    .populate('event')
                     .populate({
                         path: 'events',
                         populate: { path: 'user' },
