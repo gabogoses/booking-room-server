@@ -46,4 +46,10 @@ eventSchema.pre('save', function () {
 
 const Event = mongoose.model('Event', eventSchema);
 
+Event.watch().on('change', (data) => {
+    if (data.operationType === 'delete') {
+        console.log(data);
+    }
+});
+
 module.exports = Event;
