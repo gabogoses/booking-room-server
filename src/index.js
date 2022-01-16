@@ -5,7 +5,7 @@ const { ApolloServer } = require('apollo-server');
 const connectDatabase = require('./config/db');
 const { typeDefs, resolvers } = require('./graphql');
 const models = require('./models');
-const { decodeToken } = require('./utils');
+const { decodeToken } = require('./utils/decodeToken');
 
 connectDatabase();
 
@@ -30,7 +30,7 @@ const startApolloServer = async () => {
         },
     });
 
-    const { url, port } = await server.listen();
+    const { url, port } = await server.listen({ port: process.env.PORT || 4000 });
     console.log(`
         🚀  Server is running
         🔉  Listening on port ${port}
