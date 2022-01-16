@@ -12,7 +12,7 @@ const eventResolvers = {
             try {
                 return models.User.findById(currentUserId).populate('events');
             } catch (err) {
-                console.error('An error occured', err.message);
+                console.error('An error occured:', err.message);
                 throw new ApolloError(err);
             }
         },
@@ -32,7 +32,7 @@ const eventResolvers = {
 
                 return { token };
             } catch (err) {
-                console.error('An error occured', err.message);
+                console.error('An error occured:', err.message);
                 throw new ApolloError(err);
             }
         },
@@ -54,7 +54,7 @@ const eventResolvers = {
 
                 return { token };
             } catch (err) {
-                console.error('An error occured', err.message);
+                console.error('An error occured:', err.message);
                 throw new ApolloError(err);
             }
         },
@@ -86,7 +86,7 @@ const eventResolvers = {
 
                 return { token };
             } catch (err) {
-                console.error('An error occured', err.message);
+                console.error('An error occured:', err.message);
                 throw new ApolloError(err);
             }
         },
@@ -106,7 +106,7 @@ const eventResolvers = {
                     message: 'User deleted',
                 };
             } catch (err) {
-                console.error('An error occured', err.message);
+                console.error('An error occured:', err.message);
                 throw new ApolloError(err);
             }
         },
@@ -126,8 +126,8 @@ const eventResolvers = {
                 await user.save();
 
                 const subject = 'Reset password instructions';
-                const resetUrl = `https://example-website.com/reset-password/${resetToken}`;
                 const hotText = 'Change my password';
+                const resetUrl = `https://example-website.com/reset-password/${resetToken}`;
                 const message = `<b><strong>Hello ${email}</strong>, Forgot your password? Someone has request a link to change your password. You can do this through the button below.\n <a href=${resetUrl}>${hotText}</a></b></p>`;
 
                 await sendMail({
@@ -144,7 +144,7 @@ const eventResolvers = {
                 user.passwordResetToken = undefined;
                 await user.save();
 
-                console.error('An error occured', err.message);
+                console.error('An error occured:', err.message);
                 throw new ApolloError(err);
             }
         },
@@ -175,7 +175,7 @@ const eventResolvers = {
 
                 return { token };
             } catch (err) {
-                console.error('An error occured', err.message);
+                console.error('An error occured:', err.message);
                 throw new ApolloError(err);
             }
         },
@@ -214,7 +214,7 @@ const eventResolvers = {
 
                 return { token };
             } catch (err) {
-                console.error('An error occured', err.message);
+                console.error('An error occured:', err.message);
                 throw new ApolloError(err);
             }
         },

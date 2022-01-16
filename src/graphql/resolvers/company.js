@@ -21,7 +21,7 @@ const companyResolvers = {
 
                 return newCompany;
             } catch (err) {
-                console.error('An error occured', err.message);
+                console.error('An error occured:', err.message);
                 throw new ApolloError(err);
             }
         },

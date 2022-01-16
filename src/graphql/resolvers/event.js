@@ -14,7 +14,7 @@ const eventResolvers = {
                     populate: { path: 'user' },
                 });
             } catch (err) {
-                console.error('An error occured', err.message);
+                console.error('An error occured:', err.message);
                 throw new ApolloError(err);
             }
         },
@@ -29,7 +29,7 @@ const eventResolvers = {
                     populate: { path: 'user' },
                 });
             } catch (err) {
-                console.error('An error occured', err.message);
+                console.error('An error occured:', err.message);
                 throw new ApolloError(err);
             }
         },
@@ -86,7 +86,7 @@ const eventResolvers = {
 
                 return newEvent;
             } catch (err) {
-                console.error('An error occured', err.message);
+                console.error('An error occured:', err.message);
                 throw new ApolloError(err);
             }
         },
@@ -152,7 +152,7 @@ const eventResolvers = {
 
                 return event;
             } catch (err) {
-                console.error('An error occured', err.message);
+                console.error('An error occured:', err.message);
                 throw new ApolloError(err);
             }
         },
@@ -184,7 +184,7 @@ const eventResolvers = {
                     message: 'Event deleted',
                 };
             } catch (err) {
-                console.error('An error occured', err.message);
+                console.error('An error occured:', err.message);
                 throw new ApolloError(err);
             }
         },

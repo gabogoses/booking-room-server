@@ -8,7 +8,7 @@ const decodeToken = (token) => {
         const { id, isAdmin } = payload;
         return { id, isAdmin, isAuthenticated: true };
     } catch (err) {
-        console.error('An error occured', err.message);
+        console.error('An error occured:', err.message);
         return { isAuthenticated: false };
     }
 };

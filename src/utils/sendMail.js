@@ -25,11 +25,11 @@ const sendMail = async ({ recipient, subject, message }) => {
 
         return `Message sent: ${mailStatus.messageId}`;
     } catch (err) {
-        console.error(err);
-        throw new Error(`An error occured in sendMail function. Error: ${err.message}`);
+        console.error(err.message);
+        throw new Error(`An error occured in: sendMail function. Error: ${err.message}`);
     }
 };
 
-// sendMail feature uses MailTrap for test development.
+// sendMail method uses mailtrap.io for testing development.
 
 module.exports = sendMail;

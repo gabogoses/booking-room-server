@@ -9,7 +9,7 @@ const roomResolvers = {
                     populate: { path: 'user' },
                 });
             } catch (err) {
-                console.error('An error occured', err.message);
+                console.error('An error occured:', err.message);
                 throw new ApolloError(err);
             }
         },
@@ -24,7 +24,7 @@ const roomResolvers = {
                     populate: { path: 'user' },
                 });
             } catch (err) {
-                console.error('An error occured', err.message);
+                console.error('An error occured:', err.message);
                 throw new ApolloError(err);
             }
         },
@@ -45,7 +45,7 @@ const roomResolvers = {
 
                 return newRoom;
             } catch (err) {
-                console.error('An error occured', err.message);
+                console.error('An error occured:', err.message);
                 throw new ApolloError(err);
             }
         },
