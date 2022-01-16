@@ -14,11 +14,10 @@ const typeDefs = gql`
         id: ID!
         eventName: String!
         room: Room!
-        user: User!
+        user: User
         eventStartTime: String!
         eventEndTime: String!
         duration: Int!
-        company: Company!
         expiresAt: String!
     }
 
