@@ -10,24 +10,15 @@ It exposes a GraphQL API deployed on [Heroku](https://www.heroku.com).
 
 To run this project, you will need to add the following environment variables to your .env file.
 
-`MONGO_USER` MongoDB username
-
+`MONGO_USER`MongoDB username
 `MONGO_PWD` MongoDB password
-
 `MONGO_URL` MongoDB cluster URL
-
 `MONGO_DB_NAME` MongoDB database name
-
 `JWT_SECRET` Secure passphrase to sign and decode tokens
-
 `JWT_EXPIRES_IN` Token expiration time
-
 `SMTP_HOST` Using [mailtrap.io](https://mailtrap.io/) for testing purposes
-
 `SMTP_PORT` mailtrap smtp port
-
 `SMTP_USERNAME` mailtrap smtp username
-
 `SMTP_PASSWORD` mailtrap smtp password
 
 ## Installation
