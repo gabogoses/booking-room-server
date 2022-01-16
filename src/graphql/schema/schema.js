@@ -53,14 +53,14 @@ const typeDefs = gql`
         createEvent(eventName: String, eventStartTime: String, roomId: String): Event
         createRoom(roomNumber: String): Room
         deleteEvent(eventId: ID): Message
-        deleteUser(userId: ID): User
+        deleteUser(user: ID): User
         forgotPassword(email: String): Message
         login(email: String, password: String): AuthPayLoad
         resetPassword(email: String, password: String, resetToken: String): AuthPayLoad
         signup(email: String, password: String): AuthPayLoad
         updatePassword(newPassword: String, confirmPassword: String): AuthPayLoad
         updateEvent(eventId: ID, eventName: String, eventStartTime: String, roomId: String): Event
-        updateUser(userId: ID, email: String): AuthPayLoad
+        updateUser(user: ID, email: String): AuthPayLoad
     }
 `;
 
