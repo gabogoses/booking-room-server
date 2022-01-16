@@ -60,7 +60,7 @@ const eventResolvers = {
         },
         updateUser: async (
             _,
-            { userId, email },
+            { user: userId, email },
             { id: currentUserId, isAuthenticated, models },
         ) => {
             if (!isAuthenticated) {
@@ -90,7 +90,7 @@ const eventResolvers = {
                 throw new ApolloError(err);
             }
         },
-        deleteUser: async (_, { userId }, { id: currentUserId, isAuthenticated, models }) => {
+        deleteUser: async (_, { user: userId }, { id: currentUserId, isAuthenticated, models }) => {
             if (!isAuthenticated) {
                 throw new AuthenticationError('User is not authorized to access this resource');
             }

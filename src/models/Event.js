@@ -30,7 +30,7 @@ const eventSchema = new Schema({
         type: Number,
         default: 60,
     },
-    userId: {
+    user: {
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true,

@@ -72,7 +72,7 @@ const eventResolvers = {
                     eventName,
                     roomId,
                     eventStartTime,
-                    userId: currentUserId,
+                    user: currentUserId,
                 });
 
                 const { _id: eventId } = newEvent;
@@ -114,9 +114,9 @@ const eventResolvers = {
             try {
                 const getOriginalEvent = await models.Event.findById(currentEventId);
 
-                const { userId: originalUserId } = getOriginalEvent;
+                const { user: originalUser } = getOriginalEvent;
 
-                if (originalUserId.toString() !== currentUserId) {
+                if (originalUser.toString() !== currentUserId) {
                     throw new AuthenticationError('User is not authorized to update this resource');
                 }
 
@@ -172,7 +172,7 @@ const eventResolvers = {
                     throw new Error('Cannot find event');
                 }
 
-                const { userId: originalUserId } = getOriginalEvent;
+                const { user: originalUserId } = getOriginalEvent;
 
                 if (originalUserId.toString() !== currentUserId) {
                     throw new AuthenticationError('User is not authorized to delete this resource');
