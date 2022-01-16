@@ -5,7 +5,7 @@ const { ApolloServer } = require('apollo-server');
 const connectDatabase = require('./config/db');
 const { typeDefs, resolvers } = require('./graphql');
 const models = require('./models');
-const { decodeToken } = require('./utils/decodeToken');
+const { decodeToken } = require('./utils');
 
 connectDatabase();
 
