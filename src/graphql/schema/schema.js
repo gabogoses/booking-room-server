@@ -1,6 +1,8 @@
 const { gql } = require('apollo-server');
 
 const typeDefs = gql`
+    scalar Date
+
     type AuthPayLoad {
         token: String!
     }
@@ -13,12 +15,12 @@ const typeDefs = gql`
     type Event {
         id: ID!
         eventName: String!
-        room: Room!
-        user: User
-        eventStartTime: String!
-        eventEndTime: String!
+        roomId: Room!
+        eventStartTime: Date!
+        eventEndTime: Date!
         duration: Int!
-        expiresAt: String!
+        user: User
+        expiresAt: Date!
     }
 
     type Message {
@@ -29,7 +31,6 @@ const typeDefs = gql`
         id: ID!
         roomNumber: String!
         events: [Event]
-        user: User
     }
 
     type User {

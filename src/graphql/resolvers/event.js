@@ -1,4 +1,5 @@
 const { ApolloError, AuthenticationError } = require('apollo-server');
+const { GraphQLScalarType, Kind } = require('graphql');
 const moment = require('moment');
 
 const { isRoomBooked } = require('../../utils');
@@ -10,8 +11,8 @@ const eventResolvers = {
         getEvents: async (_, args, { models }) => {
             try {
                 return models.Event.find({}).populate({
-                    path: 'room',
-                    populate: { path: 'user' },
+                    path: 'roomId',
+                    populate: { path: 'events' },
                 });
             } catch (err) {
                 console.error('An error occured:', err.message);
@@ -25,8 +26,8 @@ const eventResolvers = {
 
             try {
                 return models.Event.findById(id).populate({
-                    path: 'room',
-                    populate: { path: 'user' },
+                    path: 'roomId',
+                    populate: { path: 'events' },
                 });
             } catch (err) {
                 console.error('An error occured:', err.message);
@@ -189,6 +190,22 @@ const eventResolvers = {
             }
         },
     },
+    Date: new GraphQLScalarType({
+        name: 'Date',
+        description: 'Date custom scalar type',
+        serialize(value) {
+            return value.getTime();
+        },
+        parseValue(value) {
+            return new Date(value);
+        },
+        parseLiteral(ast) {
+            if (ast.kind === Kind.INT) {
+                return new Date(parseInt(ast.value, 10));
+            }
+            return null;
+        },
+    }),
 };
 
 module.exports = eventResolvers;

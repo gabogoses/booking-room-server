@@ -1,5 +1,3 @@
-'use strict';
-
 const companyResolvers = require('./company');
 const eventResolvers = require('./event');
 const roomResolvers = require('./room');

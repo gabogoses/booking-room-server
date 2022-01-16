@@ -1,5 +1,5 @@
 {
-  "name": "bookingroomserver",
+  "name": "booking-room-server",
   "version": "1.0.0",
   "description": "Booking Room GraphQL Server",
   "main": "src/index.js",
