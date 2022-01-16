@@ -4,7 +4,7 @@
 
 This server works with [Node.js](https://nodejs.org/en/), [Apollo Server](https://www.apollographql.com/docs/apollo-server/), [MongoDB Atlas](https://www.mongodb.com/atlas) and, [Mongoose](https://mongoosejs.com/).
 
-It exposes a GraphQL API deployed on [Heroku](https://www.heroku.com).
+It exposes a GraphQL deployed on [Heroku](https://www.heroku.com).
 
 ## Environment Variables
 
