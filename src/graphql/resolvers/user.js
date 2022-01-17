@@ -16,18 +16,6 @@ const eventResolvers = {
                 throw new ApolloError(err);
             }
         },
-        user: async (_, args, { id: currentUserId, isAuthenticated, models }) => {
-            if (!isAuthenticated) {
-                throw new AuthenticationError('User is not authorized to access this resource');
-            }
-
-            try {
-                return models.User.findById(currentUserId);
-            } catch (err) {
-                console.error('An error occured:', err.message);
-                throw new ApolloError(err);
-            }
-        },
     },
     Mutation: {
         signup: async (_, { email, password }, { models }) => {
