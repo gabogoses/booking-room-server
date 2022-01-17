@@ -43,9 +43,13 @@ const eventResolvers = {
 
             try {
                 const user = await models.User.findOne({ email }).select('+password');
+
+                if (!user) {
+                    throw new Error('Incorrect email or password');
+                }
                 const isValidPassword = await user.evaluatePassword(password, user.password);
 
-                if (!user || !isValidPassword) {
+                if (!isValidPassword) {
                     throw new Error('Incorrect email or password');
                 }
 
