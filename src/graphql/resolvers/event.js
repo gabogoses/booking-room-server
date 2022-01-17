@@ -94,7 +94,10 @@ const eventResolvers = {
         updateEvent: async (
             _,
             {
-                eventId: currentEventId, eventName: currentEventName, eventStartTime, roomId: currentRoomId,
+                eventId: currentEventId,
+                eventName: currentEventName,
+                eventStartTime,
+                roomId: currentRoomId,
             },
             { id: currentUserId, isAuthenticated, models },
         ) => {
