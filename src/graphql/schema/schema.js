@@ -4,6 +4,7 @@ const typeDefs = gql`
     scalar Date
 
     type AuthPayLoad {
+        user: User
         token: String!
     }
 

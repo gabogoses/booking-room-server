@@ -42,7 +42,10 @@ const eventResolvers = {
                 const { _id: userId } = newUser;
                 const token = signToken(userId);
 
-                return { token };
+                return {
+                    newUser,
+                    token,
+                };
             } catch (err) {
                 console.error('An error occured:', err.message);
                 throw new ApolloError(err);
@@ -68,7 +71,10 @@ const eventResolvers = {
                 const { _id: userId, isAdmin } = user;
                 const token = signToken(userId, isAdmin);
 
-                return { token };
+                return {
+                    user,
+                    token,
+                };
             } catch (err) {
                 console.error('An error occured:', err.message);
                 throw new ApolloError(err);
