@@ -1,4 +1,4 @@
-const { ApolloError, AuthenticationError } = require('apollo-server');
+const { ApolloError, AuthenticationError, UserInputError } = require('apollo-server');
 
 const { sendMail, signToken } = require('../../utils');
 
@@ -16,11 +16,23 @@ const eventResolvers = {
                 throw new ApolloError(err);
             }
         },
+        user: async (_, args, { id: currentUserId, isAuthenticated, models }) => {
+            if (!isAuthenticated) {
+                throw new AuthenticationError('User is not authorized to access this resource');
+            }
+
+            try {
+                return models.User.findById(currentUserId);
+            } catch (err) {
+                console.error('An error occured:', err.message);
+                throw new ApolloError(err);
+            }
+        },
     },
     Mutation: {
         signup: async (_, { email, password }, { models }) => {
             if (!email || !password) {
-                throw new Error('Invalid user inputs');
+                throw new UserInputError('Invalid user inputs');
             }
 
             try {
@@ -38,7 +50,7 @@ const eventResolvers = {
         },
         login: async (_, { email, password }, { models }) => {
             if (!email || !password) {
-                throw new Error('Invalid user inputs');
+                throw new UserInputError('Invalid user inputs');
             }
 
             try {
@@ -72,7 +84,7 @@ const eventResolvers = {
             }
 
             if (!email || !userId) {
-                throw new Error('Invalid user inputs');
+                throw new UserInputError('Invalid user inputs');
             }
 
             try {
@@ -116,7 +128,7 @@ const eventResolvers = {
         },
         forgotPassword: async (_, { email }, { models }) => {
             if (!email) {
-                throw new Error('Invalid user input');
+                throw new UserInputError('Invalid user input');
             }
 
             const user = await models.User.findOne({ email });
@@ -154,7 +166,7 @@ const eventResolvers = {
         },
         resetPassword: async (_, { email, password, resetToken }, { models }) => {
             if (!email || !resetToken) {
-                throw new Error('Invalid user inputs');
+                throw new UserInputError('Invalid user inputs');
             }
 
             try {
@@ -193,7 +205,7 @@ const eventResolvers = {
             }
 
             if (!newPassword || !confirmPassword) {
-                throw new Error('Invalid user input');
+                throw new UserInputError('Invalid user input');
             }
 
             try {

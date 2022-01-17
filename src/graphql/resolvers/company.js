@@ -1,4 +1,4 @@
-const { ApolloError, AuthenticationError } = require('apollo-server');
+const { ApolloError, AuthenticationError, UserInputError } = require('apollo-server');
 
 const companyResolvers = {
     Mutation: {
@@ -12,7 +12,7 @@ const companyResolvers = {
             }
 
             if (!companyName) {
-                throw new Error('Invalid user input');
+                throw new UserInputError('Invalid user input');
             }
 
             try {

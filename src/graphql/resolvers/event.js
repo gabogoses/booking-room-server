@@ -1,4 +1,4 @@
-const { ApolloError, AuthenticationError } = require('apollo-server');
+const { ApolloError, AuthenticationError, UserInputError } = require('apollo-server');
 const { GraphQLScalarType, Kind } = require('graphql');
 const moment = require('moment');
 
@@ -21,7 +21,7 @@ const eventResolvers = {
         },
         getEvent: async (_, { id }, { models }) => {
             if (!id) {
-                throw new Error('Invalid user input');
+                throw new UserInputError('Invalid user input');
             }
 
             try {
@@ -46,7 +46,7 @@ const eventResolvers = {
             }
 
             if (!roomId || !eventStartTime) {
-                throw new Error('Invalid user inputs');
+                throw new UserInputError('Invalid user inputs');
             }
 
             try {
@@ -94,22 +94,16 @@ const eventResolvers = {
         updateEvent: async (
             _,
             {
-                eventId: currentEventId,
-                eventName: currentEventName,
-                eventStartTime,
-                roomId: currentRoomId,
+                eventId: currentEventId, eventName: currentEventName, eventStartTime, roomId: currentRoomId,
             },
-            {
-                id: currentUserId,
-                isAuthenticated, models,
-            },
+            { id: currentUserId, isAuthenticated, models },
         ) => {
             if (!isAuthenticated) {
                 throw new AuthenticationError('User is not authorized to access this resource');
             }
 
             if (!currentEventId || !currentRoomId || !eventStartTime) {
-                throw new Error('Invalid user inputs');
+                throw new UserInputError('Invalid user inputs');
             }
 
             try {
@@ -163,7 +157,7 @@ const eventResolvers = {
             }
 
             if (!eventId) {
-                throw new Error('Invalid user input');
+                throw new UserInputError('Invalid user input');
             }
 
             try {
