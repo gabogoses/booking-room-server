@@ -9,6 +9,10 @@ const roomSchema = new Schema({
         match: /^C(01|02|03|04|05|06|07|08|09|10)|P(01|02|03|04|05|06|07|08|09|10)/,
         required: [true, 'Room number is required!'],
     },
+    roomImage: {
+        type: String,
+        required: [true, 'Room image is required!'],
+    },
     events: [
         {
             type: Schema.Types.ObjectId,

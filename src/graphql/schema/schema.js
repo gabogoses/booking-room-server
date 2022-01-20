@@ -31,6 +31,7 @@ const typeDefs = gql`
     type Room {
         id: ID!
         roomNumber: String!
+        roomImage: String!
         events: [Event]
     }
 
@@ -52,7 +53,7 @@ const typeDefs = gql`
     type Mutation {
         createCompany(companyName: String): Company
         createEvent(eventName: String, eventStartTime: String, roomId: String): Event
-        createRoom(roomNumber: String): Room
+        createRoom(roomNumber: String, roomImage: String): Room
         deleteEvent(eventId: ID): Message
         deleteUser(user: ID): User
         forgotPassword(email: String): Message

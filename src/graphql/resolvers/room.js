@@ -30,17 +30,17 @@ const roomResolvers = {
         },
     },
     Mutation: {
-        createRoom: async (_, { roomNumber }, { isAdmin, isAuthenticated, models }) => {
+        createRoom: async (_, { roomNumber, roomImage }, { isAdmin, isAuthenticated, models }) => {
             if (!isAuthenticated && !isAdmin) {
                 throw new AuthenticationError('User is not allowed to create this ressource');
             }
 
-            if (!roomNumber) {
+            if (!roomNumber || !roomImage) {
                 throw new UserInputError('Invalid user input');
             }
 
             try {
-                const newRoom = new models.Room({ roomNumber });
+                const newRoom = new models.Room({ roomNumber, roomImage });
                 await newRoom.save();
 
                 return newRoom;
