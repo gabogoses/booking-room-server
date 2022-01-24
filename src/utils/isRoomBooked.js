@@ -9,8 +9,8 @@ const isRoomBooked = async (events, eventStartTime) => {
 
         const { eventStartTime: bookedEventStartTime } = await Event.findById(eventId);
 
-        const bookedEventStartHour = moment(bookedEventStartTime).hour();
-        const currentEventStartHour = moment(eventStartTime).hour();
+        const bookedEventStartHour = moment(bookedEventStartTime).utc().hour();
+        const currentEventStartHour = moment(eventStartTime).utc().hour();
 
         if (currentEventStartHour === bookedEventStartHour) {
             return true;

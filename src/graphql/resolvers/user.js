@@ -10,8 +10,12 @@ const eventResolvers = {
             }
 
             try {
-                return models.User.findById(currentUserId).populate('events');
+                return models.User.findById(currentUserId).populate({
+                    path: 'events',
+                    populate: { path: 'roomId', populate: { path: 'events' } },
+                });
             } catch (err) {
+                console.log(err);
                 console.error('An error occured:', err.message);
                 throw new ApolloError(err);
             }

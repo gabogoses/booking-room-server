@@ -49,6 +49,10 @@ const eventResolvers = {
                 throw new UserInputError('Invalid user inputs');
             }
 
+            if (moment(eventStartTime).utc().isBefore(moment().utc())) {
+                throw new UserInputError('Start time must be in the future');
+            }
+
             try {
                 const selectedEventRoom = await models.Room.findById(roomId);
 
@@ -57,9 +61,13 @@ const eventResolvers = {
                 }
                 const { events } = selectedEventRoom;
 
-                const isBooked = await isRoomBooked(events, eventStartTime);
+                let isBooked;
 
-                if (events.length >= 1 && isBooked) {
+                if (events.length >= 1) {
+                    isBooked = await isRoomBooked(events, eventStartTime);
+                }
+
+                if (isBooked) {
                     throw new Error('Room already booked');
                 }
 
@@ -87,6 +95,7 @@ const eventResolvers = {
 
                 return newEvent;
             } catch (err) {
+                console.log(err);
                 console.error('An error occured:', err.message);
                 throw new ApolloError(err);
             }
