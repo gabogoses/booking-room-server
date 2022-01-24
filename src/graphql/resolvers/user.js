@@ -35,7 +35,7 @@ const eventResolvers = {
                 const token = signToken(userId);
 
                 return {
-                    newUser,
+                    user: newUser,
                     token,
                 };
             } catch (err) {
